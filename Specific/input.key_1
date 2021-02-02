@@ -1,0 +1,2 @@
+parameters amber99sb.prm
+SOLVATE GBSA

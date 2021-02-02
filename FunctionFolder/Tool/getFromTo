@@ -1,0 +1,12 @@
+#!/usr/bin/perl
+
+$startrec = shift;
+$endrec = shift;
+
+$printit = 0;
+
+while(<>) {
+	$printit=0 if( /$endrec/ );
+	print if($printit);
+	$printit=1 if( /$startrec/ );
+}

@@ -1,0 +1,44 @@
+******************************************
+*      TYPE OF RUN AND SYSTEM            *
+******************************************
+USPEX : calculationMethod (USPEX, VCNEB, META)
+-400  : calculationType (dimension: 0-3; molecule: 0/1; varcomp: 0/1)
+1     : optType (1=enthalpy, 2=volume, 3=hardness, 4=struc_order,...)
+0     : AutoFrac
+0 : doSpaceGroup
+******************************************
+*   POPULATION AND VARIATION OPERATORS   *
+******************************************
+250   : populationSize 
+500   : initialPopSize
+100   : numGenerations 
+50    : stopCrit
+0.3   : fracRand
+0.3   : fracGene
+0.15   : fracRotMut
+0.15   : fracSecSwitch
+0.1   : fracShiftBorder
+
+% atomType
+C
+% EndAtomType
+
+% numSpecies
+54
+% EndNumSpecies
+*************************
+*   RESTART SETTINGS    *
+*************************
+0   : pickUpYN
+65  : pickUpGen
+1   : pickUpFolder
+*****************************************
+*   DETAILS OF AB INITIO CALCULATIONS   * 
+*****************************************
+abinitioCode 
+12
+ENDabinit
+
+250    : numParallelCalcs 
+2       : whichCluster
+1enh   : remoteFolder

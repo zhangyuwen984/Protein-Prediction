@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH -o out
+#SBATCH -p cpu 
+#SBATCH -J r_m_1enh
+
+if ! [ -d standart_file ]
+then
+	mkdir standart_file
+	mkdir error_files
+
+	cd standart_file
+	cp ../Specific/*.prm .
+	cp ../Specific/input* .
+	mv input.make0_1 input.make
+	mv input.key_1 input.key
+	protein < input.make
+	xyzpdb input.xyz
+	$ROSETTA3/bin/relax.static.linuxgccrelease -in:file:s input.pdb  --thorough > /dev/null 2>&1
+	mv input_0001.pdb input.pdb
+	pdbxyz input.pdb
+	printf 'A\n' | xyzint input.xyz_2
+	cd ../
+fi
+
+while [ ! -f ./USPEX_IS_DONE ]; do
+   date >> log
+   matlab < USPEX.m  >> log
+   sleep 200
+done
