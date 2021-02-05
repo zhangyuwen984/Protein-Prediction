@@ -10,6 +10,7 @@ global ORG_STRUC
 %-------------------------------------------------------------
 
 %-------------------------------------------------------------
+if false
 %Step1: To prepare the job script, runvasp.sh
   fp = fopen('myrun', 'w');
   fprintf(fp, '#!/bin/bash\n');
@@ -62,4 +63,54 @@ end
 [a,v]=unix(['ssh ' Address ' "cd ' Path '; sbatch myrun"']);
 start_marker=findstr(v,'job ');
 jobNumber = v(start_marker(1)+4:end-1);
+disp([ 'Individual : ' num2str(Ind_No) ' -- JobID :', num2str(jobNumber) ]);
+
+
+end
+
+%-----------------------------------------------------------------------
+%Step2-1: Specify the PATH to put your calculation folder
+Home = ['/home/AI/shipilov.ab/statistic_collection']; %'pwd' of your home directory of your remote machine
+Address = 'shipilov.ab@calc.cod.phystech.edu'; %your target server: username@address
+Path = [Home '/' USPEX '/CalcFold' num2str(Index)];  %Just keep it
+
+%Создаем папку USPEX в директории Home, а в ней папки CalcFold
+try
+[a,b]=unix(['ssh ' Address ' "cd ' Home '; mkdir ' USPEX '"' ]);
+catch
+end
+
+try
+[a,b]=unix(['ssh ' Address ' "cd ' Home '; cd ' USPEX '; mkdir ' Path '"' ]);
+catch
+end
+
+%Step 3: to submit the job and get JobID, i.e. the exact command to submit job.
+
+%Здесь твой код, который ты хочешь запустить в каждом CalcFold в формате: 
+fp = fopen('myrun', 'w');
+fprintf(fp,'ssh node20-24 "cd %s; ./final_run"', Path);
+fclose(fp);
+[nothing, nothing] = unix(['chmod +x myrun']);
+
+fp = fopen('final_run', 'w');
+fprintf(fp,'#!/bin/sh\n');
+fprintf(fp,'nohup ~/tools/miniconda3/envs/env/bin/python random_protein.py input 1 pseudo memory > output 2>&1 | echo $! > script_id &');
+fclose(fp);
+[nothing, nothing] = unix(['chmod +x final_run']);
+
+%создаём check_status
+[nothing, nothing] = unix(['echo ssh node20-24 "ps aux | grep shipilov.ab > jobinfo.dat"  > check_status']);
+[nothing, nothing] = unix(['chmod +x check_status']);
+
+%Копируем все необходимые файлы из папки на рюрике в папку на миптовском кластере, в которой будет исполняться код
+[nothing, nothing] = unix(['scp -r * ' Address ':' Path]);
+
+[nothing,nothing]=unix(['ssh ' Address ' "cd ' Path '; ./myrun"']);
+[nothing, nothing] = unix(['scp ' Address ':' Path '/script_id script_id.log']);
+while ~exist('script_id.log', 'file')
+    [nothing, nothing] = unix(['scp ' Address ':' Path '/script_id script_id.log']);
+end
+jobNumber=dlmread('script_id.log');
+%[nothing,jobNumber]=unix(['ssh ' Address ' "cd ' Path '; cat script_id"'])
 disp([ 'Individual : ' num2str(Ind_No) ' -- JobID :', num2str(jobNumber) ]);

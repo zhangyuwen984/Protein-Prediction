@@ -9,19 +9,30 @@ global ORG_STRUC
 %--------------------------------------------------------------------
 
 %Step1: Specify the PATH to put your calculation folder
-Home = ['/home/AI/shipilov.ab/statistic_collection/1cei']; %'pwd' of your home directory of your remote machine
+Home = ['/home/AI/shipilov.ab/statistic_collection']; %'pwd' of your home directory of your remote machine
 Address = 'shipilov.ab@calc.cod.phystech.edu'; %your target server: username@address
 Path = [Home '/' USPEX '/CalcFold' num2str(Folder)];
 
+if true
 %Step2: Check JobID, the exact command to check job by jobID
+[nothing,nothing]=unix(['ssh ' Address ' "cd ' Path '; ./check_status"']);
+[nothing,nothing]=unix(['scp ' Address ':' Path '/jobinfo.dat ../']);
+
+    [nothing, statusStr] = unix(['cat ' ORG_STRUC.homePath '/jobinfo.dat | grep ' num2str(jobID) ' | wc -l '] );
+    [nothing, nothing] = unix(['cat ' ORG_STRUC.homePath '/jobinfo.dat | grep ' num2str(jobID) ' '] );
+    isOK=str2num( statusStr );
+end
+
+if false
+%Step2: Check JobID, the exact command to check job by jobID; old
 [nothing,nothing]=unix(['ssh ' Address ' "squeue" > ' ORG_STRUC.homePath '/jobinfo.dat']);
 
-%    [nothing, nothing] = unix(['squeue > '  ORG_STRUC.homePath '/jobinfo.dat']);
     [nothing, statusStr] = unix(['cat ' ORG_STRUC.homePath '/jobinfo.dat | grep -v CG | grep -v JOBID | grep ' num2str(jobID) ' | wc -l '] );
     [nothing, nothing] = unix(['cat ' ORG_STRUC.homePath '/jobinfo.dat | grep -v CG | grep -v JOBID | grep ' num2str(jobID) ' '] );
-    % disp(statusStr)
     isOK=str2num( statusStr );
+end
 
+%Step3:
     if  isOK==0
         doneOr = 1;
         [nothing, nothing] = unix(['scp -r ' Address ':' Path '/* .']);
