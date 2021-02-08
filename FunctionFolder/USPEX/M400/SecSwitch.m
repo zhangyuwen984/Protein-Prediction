@@ -36,8 +36,8 @@ potentialOffspring = rand_structure;
 %new_secstr = RandInt(1,1,[1,7]);
 [nothing, output] = unix([ 'extract_angles.py ' num2str(ORG_STRUC.numIons)])
 output = split(output(1:end-1));
-phi = output(1:size(output)/2)
-psi = output(1 + size(output)/2 : end)
+phi = output(1:size(output)/2);
+psi = output(1 + size(output)/2 : end);
 start_new_secstr = RandInt(1,1,[1, ORG_STRUC.numIons - size(phi,1) + 1]);
     
 j=1;
