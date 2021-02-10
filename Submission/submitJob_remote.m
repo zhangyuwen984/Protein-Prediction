@@ -68,6 +68,7 @@ disp([ 'Individual : ' num2str(Ind_No) ' -- JobID :', num2str(jobNumber) ]);
 
 end
 
+if true
 %-----------------------------------------------------------------------
 %Step2-1: Specify the PATH to put your calculation folder
 Home = ['/home/AI/shipilov.ab/statistic_collection']; %'pwd' of your home directory of your remote machine
@@ -85,11 +86,14 @@ try
 catch
 end
 
+%Находим свободные ноды для сабмита
+[nothing, node] = unix(['~/miniconda3/bin/python ../Submission/remote_free_nodes.py']);
+
 %Step 3: to submit the job and get JobID, i.e. the exact command to submit job.
 
 %Здесь твой код, который ты хочешь запустить в каждом CalcFold в формате: 
 fp = fopen('myrun', 'w');
-fprintf(fp,'ssh node20-24 "cd %s; ./final_run"', Path);
+fprintf(fp,'ssh %s "cd %s; ./final_run"', node, Path);
 fclose(fp);
 [nothing, nothing] = unix(['chmod +x myrun']);
 
@@ -100,7 +104,7 @@ fclose(fp);
 [nothing, nothing] = unix(['chmod +x final_run']);
 
 %создаём check_status
-[nothing, nothing] = unix(['echo ssh node20-24 "ps aux | grep shipilov.ab > jobinfo.dat"  > check_status']);
+[nothing, nothing] = unix(['echo ssh ' node ' "ps aux | grep shipilov.ab > jobinfo.dat"  > check_status']);
 [nothing, nothing] = unix(['chmod +x check_status']);
 
 %Копируем все необходимые файлы из папки на рюрике в папку на миптовском кластере, в которой будет исполняться код
@@ -114,3 +118,4 @@ end
 jobNumber=dlmread('script_id.log');
 %[nothing,jobNumber]=unix(['ssh ' Address ' "cd ' Path '; cat script_id"'])
 disp([ 'Individual : ' num2str(Ind_No) ' -- JobID :', num2str(jobNumber) ]);
+end
