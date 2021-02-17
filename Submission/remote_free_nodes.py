@@ -2,7 +2,7 @@ import time
 import subprocess
 import random
 
-def get_free_node(occupied_node=[]):
+def get_free_node(occupied_node):
     '''Возвращает название свободной ноды, на которую возможно отправить задачу'''
 
     squeue = subprocess.run('ssh shipilov.ab@calc.cod.phystech.edu "squeue"',
@@ -10,6 +10,8 @@ def get_free_node(occupied_node=[]):
     content=list(map(lambda x: x.split(), squeue.strip().split('\n')))
     possible_nodes=list(map(lambda x: x[8], content))[1:]
 
+    #удаляем ноды, которые ещё не выделены и у них в статусе указано "(Priority)"
+    possible_nodes=list(filter(lambda element: element!='(Priority)', possible_nodes))
 
     number_of_processes = float('inf')
 
@@ -27,4 +29,4 @@ def get_free_node(occupied_node=[]):
     print(node, end='')
     return node
 
-get_free_node()
+get_free_node(occupied_node=[])
