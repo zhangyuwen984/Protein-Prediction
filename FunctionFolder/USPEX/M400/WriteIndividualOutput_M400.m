@@ -25,11 +25,6 @@ if strcmp(POP_STRUC.POPULATION(Ind_No).howCome, 'keptBest') > 0
     [nothing, nothing] = unix(['cat PDB | sed "s/HEADER    EA' num2str(parent_id) '/HEADER    EA' num2str(bodyCount) ' <-' num2str(parent_id) '/g" >> gatheredPDB']);
     [nothing, nothing] = unix(['rm -f PDB']);
 
-    [nothing, nothing] = unix(['cat /dev/null > POSCAR']);
-    getPOSCAR(parent_id, 'gatheredPOSCARS');
-    [nothing, nothing] = unix(['cat POSCAR | sed "s/EA' num2str(parent_id) '/EA' num2str(bodyCount) '/g" >> gatheredPOSCARS']);
-    [nothing, nothing] = unix(['rm -f POSCAR']);
-
     cd ..
 else
     [nothing, nothing] = unix(['cat PDB | sed "s/HEADER    /HEADER    EA' num2str(bodyCount) ' /g" >> ' POP_STRUC.resFolder '/gatheredPDB']);
@@ -37,10 +32,9 @@ else
     [nothing, nothing] = unix(['echo EA' num2str(bodyCount) ' >> ' POP_STRUC.resFolder '/gatheredMAKE']);
     [nothing, nothing] = unix(['cat MAKE                      >> ' POP_STRUC.resFolder '/gatheredMAKE']);
 
-    [nothing, nothing] = unix(['cat POSCAR     | sed "s/EA0000/EA' num2str(bodyCount) '/g" >> ' POP_STRUC.resFolder '/gatheredPOSCARS']);
 end
 
-[nothing, nothing] = unix(['rm -f PDB MAKE POSCAR']);
+[nothing, nothing] = unix(['rm -f PDB MAKE']);
 
 atomType = ORG_STRUC.atomType;
 update_USPEX_INDIVIDUAL(POP_STRUC.POPULATION(Ind_No), resFolder, ...

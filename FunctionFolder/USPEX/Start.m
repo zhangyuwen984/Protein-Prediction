@@ -115,8 +115,6 @@ while 1
     else
         if exist('still_running')
             [a,b]=unix('rm still_running');
-            [a,b]=unix('rm POSCAR');
-            [a,b]=unix('rm POSCAR_order');
         end
         disp('USPEX IS DONE!');
         [a,b]=unix('echo 1 > USPEX_IS_DONE');

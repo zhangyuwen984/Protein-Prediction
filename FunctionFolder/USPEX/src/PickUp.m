@@ -32,7 +32,7 @@ if exist('POOL.mat')
 end
 
 cd ../
-%Удаление лишних структур из gatheredPDB, gatheredMAKE, gatheredPOSCARS (тех, что относятся к поколениям после pickUpGen)
+%Удаление лишних структур из gatheredPDB, gatheredMAKE (тех, что относятся к поколениям после pickUpGen)
 % и копирование его в новую папку
 [nothing, nothing] = unix(['mv gatheredPDB  gatheredPDB_old']);
 [nothing, nothing] = unix(['remove_excess.py gatheredPDB EA' num2str(POP_STRUC.POPULATION(end).Number + 1)]);
@@ -42,9 +42,6 @@ cd ../
 [nothing, nothing] = unix(['remove_excess.py gatheredMAKE EA' num2str(POP_STRUC.POPULATION(end).Number + 1)]);
 [nothing, nothing] = unix(['mv gatheredMAKE  ../' num2str(ORG_STRUC.resFolder)]);
 
-[nothing, nothing] = unix(['mv gatheredPOSCARS  gatheredPOSCARS_old']);
-[nothing, nothing] = unix(['remove_excess.py gatheredPOSCARS EA' num2str(POP_STRUC.POPULATION(end).Number + 1)]);
-[nothing, nothing] = unix(['mv gatheredPOSCARS  ../' num2str(ORG_STRUC.resFolder)]);
 cd (['generation' num2str(ORG_STRUC.pickUpGen)])
 
 if ORG_STRUC.fixRndSeed > 0

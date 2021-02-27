@@ -53,8 +53,4 @@ PROTEINS_STRUC.secondary_structure = sec_list;
 [nothing, nothing] = unix(['cat /dev/null         > ' ORG_STRUC.homePath '/MAKE']);
 [nothing, nothing] = unix(['cat input_stable.make > ' ORG_STRUC.homePath '/MAKE']);
 
-% Print POSCARs:
-[nothing, nothing] = unix(['cat /dev/null           > ' ORG_STRUC.homePath '/POSCAR']);
-[nothing, nothing] = unix(['cat POSCAR_backbone     > ' ORG_STRUC.homePath '/POSCAR']);
-
 end

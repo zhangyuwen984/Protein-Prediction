@@ -34,28 +34,6 @@ vacuumSize = 10;
 [norm_crd]      = moveCluster(lat,  norm_crd);
 
 %-------------------------------------------------------------------------------
-% Print POSCAR file:
-fp = fopen('POSCAR_backbone', 'w');
-fprintf(fp, 'EA0000\n');
-fprintf(fp, '1.0000\n');
-
-for latticeLoop = 1 : 3
-   fprintf(fp, '%12.6f %12.6f %12.6f\n', lat(latticeLoop,:));
-end
-
-fprintf(fp, '%4s\n', 'C');
-fprintf(fp, '%4d\n', numIons);
-fprintf(fp, 'Direct\n');
-
-for coordLoop = 1 : numIons
-    x = norm_crd(coordLoop, 1);
-    y = norm_crd(coordLoop, 2);
-    z = norm_crd(coordLoop, 3);
-    
-    fprintf(fp, '%12.6f %12.6f %12.6f\n', [x y z]);
-end
-fclose(fp);
-%-------------------------------------------------------------------------------
 
 PROTEINS_STRUC.lattice           = lat;
 PROTEINS_STRUC.backbone_crd      = backbone_crd;

@@ -27,10 +27,6 @@ end
 [nothing, nothing] = unix(['cp -f PDB ' pdb_folder '/EA' sprintf('%04d', POP_STRUC.POPULATION(IND).Number) '.pdb']);
 [nothing, nothing] = unix(['rm -f PDB']);
 
-getPOSCAR(POP_STRUC.POPULATION(IND).Number, 'gatheredPOSCARS');
-[nothing, nothing] = unix(['cat POSCAR >> BESTgatheredPOSCARS']);
-[nothing, nothing] = unix(['rm -f POSCAR']);
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %RMSD OUTPUT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
