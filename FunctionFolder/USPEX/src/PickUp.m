@@ -32,14 +32,22 @@ if exist('POOL.mat')
 end
 
 cd ../
+
+%Поиск структуры с самым большим номером среди того поколения, с которого стартуем
+allStructs=[POP_STRUC.POPULATION().Number];
+maxValue = max(allStructs);
+
 %Удаление лишних структур из gatheredPDB, gatheredMAKE (тех, что относятся к поколениям после pickUpGen)
 % и копирование его в новую папку
-[nothing, nothing] = unix(['mv gatheredPDB  gatheredPDB_old']);
-[nothing, nothing] = unix(['remove_excess.py gatheredPDB EA' num2str(POP_STRUC.POPULATION(end).Number + 1)]);
+[nothing, nothing] = unix(['cp gatheredPDB >> gatheredPDB_copy']);
+%[nothing, nothing] = unix(['cat all_gatheredPDB >> tmp_gatheredPDB']);
+[nothing, nothing] = unix(['cat old_gatheredPDB >> tmp_gatheredPDB']);
+[nothing, nothing] = unix(['mv tmp_gatheredPDB  gatheredPDB_old']);
+[nothing, nothing] = unix(['remove_excess.py gatheredPDB EA' num2str(maxValue + 1)]);
 [nothing, nothing] = unix(['mv gatheredPDB  ../' num2str(ORG_STRUC.resFolder)]);
 
 [nothing, nothing] = unix(['mv gatheredMAKE  gatheredMAKE_old']);
-[nothing, nothing] = unix(['remove_excess.py gatheredMAKE EA' num2str(POP_STRUC.POPULATION(end).Number + 1)]);
+[nothing, nothing] = unix(['remove_excess.py gatheredMAKE EA' num2str(maxValue + 1)]);
 [nothing, nothing] = unix(['mv gatheredMAKE  ../' num2str(ORG_STRUC.resFolder)]);
 
 cd (['generation' num2str(ORG_STRUC.pickUpGen)])
