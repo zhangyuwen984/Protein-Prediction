@@ -33,17 +33,17 @@ end
 
 cd ../
 
-%Поиск структуры с самым большим номером среди того поколения, с которого стартуем
+%Определение первого и последнего номера структур поколения, с которого восстанавливаемся
 allStructs=[POP_STRUC.POPULATION().Number];
+allStructs(allStructs==0) = [];
 maxValue = max(allStructs);
+minValue = min(allStructs);
 
-%Удаление лишних структур из gatheredPDB, gatheredMAKE (тех, что относятся к поколениям после pickUpGen)
+%Удаление лишних структур из gatheredPDB, gatheredMAKE (тех, что относятся к поколениям после и до pickUpGen)
 % и копирование его в новую папку
-[nothing, nothing] = unix(['cp gatheredPDB >> gatheredPDB_copy']);
-%[nothing, nothing] = unix(['cat all_gatheredPDB >> tmp_gatheredPDB']);
-[nothing, nothing] = unix(['cat old_gatheredPDB >> tmp_gatheredPDB']);
+[nothing, nothing] = unix(['cat all_gatheredPDB >> tmp_gatheredPDB']);
 [nothing, nothing] = unix(['mv tmp_gatheredPDB  gatheredPDB_old']);
-[nothing, nothing] = unix(['remove_excess.py gatheredPDB EA' num2str(maxValue + 1)]);
+[nothing, nothing] = unix(['remove_excess.py gatheredPDB EA' num2str(maxValue + 1) ' EA' num2str(minValue - 1)]);
 [nothing, nothing] = unix(['mv gatheredPDB  ../' num2str(ORG_STRUC.resFolder)]);
 
 [nothing, nothing] = unix(['mv gatheredMAKE  gatheredMAKE_old']);
